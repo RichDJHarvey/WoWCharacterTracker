@@ -8,4 +8,5 @@ Route::get('/', function () {
 });
 
 
-Route::get('/character/{realm}/{name}', [CharacterController::class, 'getCharacter']);
+Route::get('/character/{realm}/{name}', [CharacterController::class, 'getCharacterData']);
+Route::get('/character/{realm}/{name}/media', [CharacterController::class, 'getCharacterMedia']);

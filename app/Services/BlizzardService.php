@@ -55,4 +55,23 @@ class BlizzardService
             ]
         )->json();
     }
+
+    /**
+     * @param string $realm
+     * @param string $name
+     * @return mixed
+     * @throws ConnectionException
+     */
+    public function getCharacterMedia(string $realm, string $name): mixed
+    {
+        $token = $this->getAccessToken();
+
+        $character = $this->getCharacter($realm, $name);
+
+        if(!isset($character['media']['href'])) {
+            throw new Exception('Media link for character not found');
+        }
+
+        return Http::withToken($token)->get($character['media']['href'])->json();
+    }
 }
