@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Responses\CharacterMediaResponse;
 use App\Services\BlizzardService;
+use Exception;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\JsonResponse;
 
@@ -14,6 +16,7 @@ class CharacterController extends Controller
      * @param string $name
      * @return JsonResponse
      * @throws ConnectionException
+     * @throws Exception
      */
     public function getCharacterData(BlizzardService $blizzard, string $realm, string $name): JsonResponse
     {
@@ -26,12 +29,13 @@ class CharacterController extends Controller
      * @param BlizzardService $blizzard
      * @param string $realm
      * @param string $name
-     * @return JsonResponse
-     * @throws ConnectionException
+     * @return array
+     * @throws Exception
      */
-    public function getCharacterMedia(BlizzardService $blizzard, string $realm, string $name): JsonResponse
+    public function getCharacterMedia(BlizzardService $blizzard, string $realm, string $name): array
     {
         $media = $blizzard->getCharacterMedia($realm, $name);
-        return response()->json($media);
+
+        return CharacterMediaResponse::one($media);
     }
 }

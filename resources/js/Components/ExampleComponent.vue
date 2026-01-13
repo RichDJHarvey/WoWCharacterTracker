@@ -2,24 +2,24 @@
     <div class="p-6 bg-gray-50 rounded-lg shadow-md">
         <h1 class="text-2xl font-bold text-blue-700 mb-2">Character Media Test</h1>
 
-        <div class="mb-4">
+        <div class="mb-4 flex flex-wrap gap-2">
             <input
                 v-model="realm"
                 type="text"
                 placeholder="Realm"
-                class="border rounded p-2 mr-2"
+                class="border rounded p-2"
             />
             <input
                 v-model="name"
                 type="text"
                 placeholder="Character Name"
-                class="border rounded p-2 mr-2"
+                class="border rounded p-2"
             />
             <Button severity="info" label="Fetch Media" @click="fetchMedia" />
         </div>
 
-        <div v-if="loading" class="text-gray-500">Loading...</div>
-        <div v-if="error" class="text-red-500">{{ error }}</div>
+        <div v-if="loading" class="text-gray-500 mb-2">Loading...</div>
+        <div v-if="error" class="text-red-500 mb-2">{{ error }}</div>
 
         <div v-if="media" class="mt-4 flex flex-col gap-4">
             <div v-if="media.avatar">
@@ -57,16 +57,18 @@ const fetchMedia = async () => {
     await axios
         .get(`/character/${realm.value}/${name.value}/media`)
         .then((response) => {
-            if (response.data.assets) {
-                media.value = response.data.assets.reduce((obj, asset) => {
-                    obj[asset.key] = asset.value;
-                    return obj;
-                }, {});
+            const data = response.data;
+
+            if (data.assets) {
+                media.value = data.assets;
             } else {
                 error.value = 'No media assets found';
             }
             loading.value = false;
         })
-        .catch(() => {});
+        .catch(() => {
+            error.value = 'Failed to fetch media';
+            loading.value = false;
+        });
 };
 </script>
